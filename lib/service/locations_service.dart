@@ -1,5 +1,5 @@
 import '../model/ride/locations.dart';
-
+import '../repository/locations_repository.dart';
 import '../dummy_data/dummy_data.dart';
 
 ////
@@ -8,6 +8,27 @@ import '../dummy_data/dummy_data.dart';
 ///
 class LocationsService {
 
-  static const List<Location> availableLocations = fakeLocations; 
- 
+  static LocationsService? _instance; 
+  final LocationsRepository repository;
+
+  LocationsService._internal(this.repository);
+
+  static void initialize(LocationsRepository repository) {
+    if (_instance == null) {
+      _instance = LocationsService._internal(repository);
+    } else {
+      throw Exception("LocationsService is already initialized.");
+    }
+  }
+  ///
+  /// Singleton accessor
+  ///
+  static LocationsService get instance {
+    if (_instance == null) {
+      throw Exception(
+        "LocationsService is not initialized. Call initialize() first.",
+      );
+    }
+    return _instance!;
+  }
 }
